@@ -42,7 +42,7 @@
       <div class="slides">
         <section data-markdown data-separator="^~~~~" data-separator-vertical="^~" data-notes="^Note:">
           <script type="text/template">
-          ## Full Stack Scala  
+          ## Functional Programming with Scala  
 
           ### Lesson 1
 
@@ -62,13 +62,157 @@
 
           ~
 
-          * Gain an understanding of functional programming
-          * Learn to do functional programming in Scala
-            * including associated libraries like Cats and Shapeless
-          * Take these concepts and apply them to your work.
+          Learn about Functional programming...
+          ~
+          ...in Scala
+          ~
+          We'll look at what's baked into the language
+          ~
+          We'll look at the FP ecosystem (libraries - mostly Typelevel)
+          ~
+          FP is a mindset/approach to programming.
+
+          You can apply this approach in Java, Python, JavaScript, etc.
+          ~~~~
+          What is functional programming?
+          ~
+          At a high level: Functional programming is a style of programming which models computations as the evaluation of expressions
+
+          In contrast with imperative programming where programs are composed of statements  which change global state when executed.  <!-- .element: class="fragment" data-fragment-index="1" -->
+          ~
+          Functional programming has been around a long time
+
+          Lambda calculus in 1930s and then Lisp in 1950s.
+          ~
+          Lisp has been around for ~60 years.  
+
+          Why are people only excited about this now?
+          ~
+          Computers were slow.  
+          ~
+          At the time there were two directions that the design and implementation of programming languages:  
+          * Start from the Von Neumann Architecture and add abstraction.
+          * Start from Mathematics and remove abstraction.
+          ~
+          Lisp was too slow.  
+
+          Imperative won.
+          Note:
+          Computer couldn't handle that much abstraction.
+          ~
+          But now computer are fast. 
+          Note: Memory is cheap.
+          ~~~~
+          Some Concepts, Idioms and Philosophy of FP
+          ~
+          Immutability.  
+
+          Once you create something, you don't modify it.
+
+          Note: 
+          * It's threadsafe. 
+          * Not as expensive as it used to.
+          * Show some stuff in Scala.
+            * val vs var
+            * collections. immutable by default. AKA Persistent data structures
+            * case classes
+              * val is the default
+              * copy method
+                *maybe mention lenses
+          ~
+          Functions. In the pure mathematical sense. Or referentially transparent.
+
+          Why? <!-- .element: class="fragment" data-fragment-index="1" -->
+
+          Easier to reason about and compose<!-- .element: class="fragment" data-fragment-index="2" -->
 
           Note:
+          * Referencial transparency: A given invocation of a pure function can always be replaced by its result
+          * They take input and produce an output. No side effects  
+          * Scala doesn't enforce this. Other languages do, e.g. Haskell.
+          * If immutable input/output:
+            * Ordering requirements are more explicit. (Don't hide a lookup to the DB, pass the retrieved records in)
+            * You get concurrency for free.
+          * Easier to test. If all your inputs are there explicitly in the type signature, you provide them
+          ~
+          First class functions. You can pass them around.
+
+          Note:
+          * enable composition. changing functions. Scala has `andThen`
+          * Show the difference between methods and functions in Scala REPL/ammonite:
+          ```
+          grogs-grogs@ def method(i: Int): Int = i \* 2
+          defined function method
+          grogs-grogs@ val function = (i: Int) => i \* 2
+          function: Int => Int = <function1>
+          ```
+            * Scala really hides this from you. We can call `(1 to 3).foreach(println)`. `println` is a method, but a function will be created for you.
+          ~
+          Totality.  
+
+          Functions should be total.  
+
+          Every input has a corresponding output.
+
+
+          Note:
+          * ##DEMO
+          * Scala doesn't enforce this. But it does have partial functions, and the compile identies not exhaustive functions
+          * Example of non-total functions
+          ~
+          Types vs Classes. Well Algebraic Data Types
+
+          Classes in the OO sense are about encapulation.
+
+          Types are about input and output.
+
+          Confusingly, in Scala we model types with classes.
+
+          *Demo of sealed traits here. Explain union types, sum types. Mention shapeless encoding?* 
+          ~
+          Types as documentation (and domain modeling)
+
+          Note:
+          Input and output types serve as documentation
+          *How to I mention typeclasses here?*
+          *Ties into DDD*
+          ~
+          Push side effects to the edge of your system
+          ~
+          Parameterize everything / Make things generic
+          ~
+          Partial functions/currying
+          ~~~~
+          scala labs
+          ~
+          A set of exercises to learn Scala.
+
+          Today, let's get setup and try to complete ListManipulationExercise02.
+          ~
+          * Read through https://scala-labs.github.io/getting-started.html.
+          * Get the tests in ListManipulationExercise02 running in IDE
+          * Make them pass
+          
+          ~~~~
+
+          ###Credits
+          These resources were helpful when I put together these slides:
+          * ['Functional Programming should be your #1 priority for 2015' by Ju Gonçalves](https://medium.com/@jugoncalves/functional-programming-should-be-your-1-priority-for-2015-47dd4641d6b9#.6h0qyo7fo)
+          * [https://wiki.haskell.org/Functional_programming](https://wiki.haskell.org/Functional_programming)
+          * [Functional Programming: Concepts, Idioms and Philosophy](https://hkupty.github.io/2016/Functional-Programming-Concepts-Idioms-and-Philosophy/)
+          * ['Function Programming Patterns' by Scott Wlaschin](http://www.slideshare.net/ScottWlaschin/fp-patterns-ndc-london2014)
+          </script>         
+        </section>
+
+
+         <!--  ~~~~
+
+          Lots of FP research has been done since.
+
+          * Persistent data structures
+
           If you're using Java, you can still apply these techniques. 
+
           But the compiler won't do as much work for you. The syntax won't be as nice, and less compile time safety.
 
           ~
@@ -77,11 +221,15 @@
 
           ~~~~
 
+          Functional programming is a style of programming where functions don't have side effects. 
+
+          ~
+
           ###Functional vs Imperative 
           ####AKA Pure vs Impure, or Immutable vs Mutable 
 
           <br /><br />
-          Functional programming is a style of programming where we program by composing __expressions__.
+          In functional programming we compose programs using __expressions__.
           
           This is in contrast to composing __statements__.  
 
@@ -89,7 +237,9 @@
           Statements have side effects, expressions return a value.
 
           ~
-          Expressions come from λ Calculus developed in 1930s
+          
+          Functions compose
+
           ~
 
           Example: Print the sum the numbers between 1 and 10
@@ -141,10 +291,8 @@
           Why is it worthwhile?
             Parallelism
             Easier to reason about
-            Composable/Re-usable
+            Composable/Re-usable -->
 
-          </script>         
-        </section>
 <!--        <section>
           <h1>Code</h1>
           <p>We won't write any code today. Instead we'll look at the code we already have.</p>
