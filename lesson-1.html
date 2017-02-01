@@ -93,6 +93,8 @@
           At the time there were two directions that the design and implementation of programming languages:  
           * Start from the Von Neumann Architecture and add abstraction.
           * Start from Mathematics and remove abstraction.
+
+          Note: Von Neumann base: FORTRAN -> ALGOL -> BCPL -> C
           ~
           Lisp was too slow.  
 
@@ -101,7 +103,9 @@
           Computer couldn't handle that much abstraction.
           ~
           But now computer are fast. 
-          Note: Memory is cheap.
+          Note: 
+          * Memory is cheap.
+          * Von Neumann models a single machine, that style of programming doesn't work when distributing computation
           ~~~~
           Some Concepts, Idioms and Philosophy of FP
           ~
@@ -160,28 +164,48 @@
           * Scala doesn't enforce this. But it does have partial functions, and the compile identies not exhaustive functions
           * Example of non-total functions
           ~
-          Types vs Classes. Well Algebraic Data Types
+          Decouple data from behaviour
 
+          In OO, we encapsulate an object's state and behaviour together.<!-- .element: class="fragment" data-fragment-index="1" -->
+
+          In FP, we have immutable data and pure functions. No need to encapsulate/restrict usage.<!-- .element: class="fragment" data-fragment-index="2" -->
+          ~
+          Types vs Classes. 
+          
           Classes in the OO sense are about encapulation.
 
-          Types are about input and output.
+          Types are about input and output.  
 
-          Confusingly, in Scala we model types with classes.
-
-          *Demo of sealed traits here. Explain union types, sum types. Mention shapeless encoding?* 
-          ~
-          Types as documentation (and domain modeling)
+          Confusingly, in Scala we model types with classes.<!-- .element: class="fragment" data-fragment-index="1" -->
 
           Note:
-          Input and output types serve as documentation
-          *How to I mention typeclasses here?*
-          *Ties into DDD*
+          * Well Algebraic Data Types
+          * *Demo of sealed traits here. Explain union types, sum types. Mention shapeless encoding?* 
+          * You can still have methods on classes. But they're pure functions which don't mutate. They could go anywhere (e.g. copy/toString/hashcode methods).
+          ~
+          Types as documentation
+
+          Note:
+          * Input and output types serve as documentation
+          * Monads? Maybe mention Slick 3 DBIO.
+          * Should I mention typeclasses here?*
+          <!-- * *Ties into DDD* ??? -->
           ~
           Push side effects to the edge of your system
+          Note: Mention Slick DBIO again
           ~
-          Parameterize everything / Make things generic
-          ~
-          Partial functions/currying
+          Parameterize everything / Make everything as generic as possible.
+
+          This enables maximum re-use/composition.  
+
+          <div>
+          <br />
+          But this quickly needs to general abstract nonsense. AKA category theory.  
+
+          See [You Could Have Invented Monads! (And Maybe You Already Have.)](http://blog.sigfpe.com/2006/08/you-could-have-invented-monads-and.html)  
+          </div><!-- .element: class="fragment" data-fragment-index="1" -->
+          <!-- ~ -->
+          <!-- Partial functions/currying -->
           ~~~~
           scala labs
           ~
@@ -195,7 +219,7 @@
           
           ~~~~
 
-          ###Credits
+          ###Credits / Further Reading
           These resources were helpful when I put together these slides:
           * ['Functional Programming should be your #1 priority for 2015' by Ju Gonçalves](https://medium.com/@jugoncalves/functional-programming-should-be-your-1-priority-for-2015-47dd4641d6b9#.6h0qyo7fo)
           * [https://wiki.haskell.org/Functional_programming](https://wiki.haskell.org/Functional_programming)
