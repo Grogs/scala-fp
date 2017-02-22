@@ -108,7 +108,9 @@
           As a convenience, the typeclass's companion object implements an `apply` method to get hold of instances.
 
           ```scala
-          object Show { def apply[T: Show]: Show[T] = implicitly[Show[T]] }
+          object Show { 
+            def apply[T: Show]: Show[T] = implicitly[Show[T]] 
+          }
           ```
 
           Usage:
