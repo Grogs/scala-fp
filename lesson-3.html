@@ -1,0 +1,179 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <title>reveal.js</title>
+
+    <link rel="stylesheet" href="css/reveal.css">
+    <link rel="stylesheet" href="css/theme/sky.css">
+
+    <!-- Theme used for syntax highlighting of code -->
+    <link rel="stylesheet" href="lib/css/docco.css">
+
+    <!-- Printing and PDF exports -->
+    <script>
+      var link = document.createElement( 'link' );
+      link.rel = 'stylesheet';
+      link.type = 'text/css';
+      link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+      document.getElementsByTagName( 'head' )[0].appendChild( link );
+    </script>
+    <style>
+      .reveal .footer {
+        position: absolute;
+        bottom: 1em;
+        left: 1em;
+        font-size: 0.7em;
+      }
+
+      /*Theme overrides*/
+        .reveal h1, .reveal h2, .reveal h3, .reveal h4, .reveal h5, .reveal h6 {
+          text-transform: none;
+        }
+    </style>
+  </head>
+  <body>
+    <div class="reveal">
+      <div class='footer'>
+        <a href="https://grogs.github.io/scala-fp">grogs.github.io/scala-fp</a>
+      </div>
+      <div class="slides">
+        <section data-markdown data-separator="^~~~~" data-separator-vertical="^~" data-notes="^Note:">
+          <script type="text/template">
+          <!--language=Markdown-->
+          ## Functional Programming with Scala  
+
+          ### Lesson 3
+
+
+
+          ~~~~
+          ##Cats
+          ~
+          A library for functional programming is Scala
+          ~
+          Provides a number of Typeclasses inspired by Category Theory
+          ~
+          ![Some Categories](cats-typeclasses.png)
+
+
+
+
+          ~~~~
+          What is a typeclass?
+          ~
+          Typeclasses are like java interfaces, but more flexible.
+          ~
+          We declare them as traits, but we don't mix them into our classes.
+
+          ```scala
+          trait Show[A] {
+            def shows(a: A): String
+          }
+          ```
+
+          vs mix-in style interface:
+          
+          ```scala
+          trait Show {
+            def shows(): String
+          }
+          ```
+          ~
+          Instead, we define typeclass instances separately. Allowing adhoc polymorphism.
+
+          Example:
+
+          ```scala
+          implicit object IntShow extends Show[Int] {
+            def shows(a: Int) = a.toString
+          }
+          ```
+          ~
+          When we want to use it, we resolve it implicity:
+
+          ```scala
+          def shows[A](a: A)(implicit shower: Show[A]) = shower.shows(a)
+          ```
+
+          or the shorthand with context bounds:
+
+          ```scala
+          def shows[A : Show](a: A) = implicitly[Show[A]].shows(a)
+
+          ```
+          ~
+          As a convenience, the typeclass's companion object implements an `apply` method to get hold of instances.
+
+          ```scala
+          object Show { def apply[T: Show]: Show[T] = implicitly[Show[T]] }
+          ```
+
+          Usage:
+          ```scala
+          Show[Int] // IntShow which we defined above
+          ```
+          ~
+          We can pimp this onto our classes
+
+          ```scala
+          implicit class ShowSyntax[A](a: A) {
+            def shows(implicit shower: Show[A]) = shower.shows(a)
+          }
+
+          ```
+          
+          Allowing us to use it like a normal method:
+          ```scala
+          5.show // "5"
+          ```
+          ~
+          What have we gained?
+
+          Note: This technique is kind of strange... We did a lot of stuff, why not use normal interfaces?
+          ~
+          Ad-hoc Polymorphism
+
+          We can add typeclass instances for existing types without changing them.
+
+          Note: Interestingly, it's even more ad-hoc than Haskell - we can override a typeclass in any scope.
+          ~
+          Used a lot in Scala:
+          * Play Json.toJson
+          * scala.util.List.max
+
+          ~~~~
+          Back to Cats
+          ~
+          Cats provides a number of useful typeclasses
+          ~
+          Let's play around with some of them on [Scala Exercises](https://www.scala-exercises.org/cats)
+          
+          </script>
+        </section>
+
+      </div>
+    </div>
+
+    <script src="lib/js/head.min.js"></script>
+    <script src="js/reveal.js"></script>
+
+    <script>
+      // More info https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+        history: true,
+//         showNotes: true,
+
+        // More info https://github.com/hakimel/reveal.js#dependencies
+        dependencies: [
+          { src: 'plugin/markdown/marked.js' },
+          { src: 'plugin/markdown/markdown.js' },
+          { src: 'plugin/notes/notes.js', async: true },
+          { src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } }
+        ]
+      });
+    </script>
+  </body>
+</html>
