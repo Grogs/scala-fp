@@ -14,9 +14,7 @@ Monoid[String].empty //""
 Monoid[Map[String, Int]].empty //Map.empty
 
 //Composition
-
 (1, 2) |+| (3, 4)
-
 Map("a" -> 1, "b" -> 2) combine Map("b" -> 1, "c" -> 2)
 
 
