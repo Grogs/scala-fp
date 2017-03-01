@@ -1,0 +1,189 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <title>reveal.js</title>
+
+    <link rel="stylesheet" href="css/reveal.css">
+    <link rel="stylesheet" href="css/theme/sky.css">
+
+    <!-- Theme used for syntax highlighting of code -->
+    <link rel="stylesheet" href="lib/css/docco.css">
+
+    <!-- Printing and PDF exports -->
+    <script>
+      var link = document.createElement( 'link' );
+      link.rel = 'stylesheet';
+      link.type = 'text/css';
+      link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+      document.getElementsByTagName( 'head' )[0].appendChild( link );
+    </script>
+    <style>
+      .reveal .footer {
+        position: absolute;
+        bottom: 1em;
+        left: 1em;
+        font-size: 0.7em;
+      }
+
+      /*Theme overrides*/
+        .reveal h1, .reveal h2, .reveal h3, .reveal h4, .reveal h5, .reveal h6 {
+          text-transform: none;
+        }
+    </style>
+  </head>
+  <body>
+    <div class="reveal">
+      <div class='footer'>
+        <a href="https://grogs.github.io/scala-fp">grogs.github.io/scala-fp</a>
+      </div>
+      <div class="slides">
+        <section data-markdown data-separator="^~~~~" data-separator-vertical="^~" data-notes="^Note:">
+          <script type="text/template">
+<!--language=Markdown-->
+## Functional Programming with Scala  
+
+### Lesson 4
+
+~~~~
+#### Lesson 3 Review
+~
+We started by looking at how type classes work in Scala
+
+Note:
+Kind of like an interface, but rather than mixin with inheritance, we implement the typeclass seperately. It's made available via implicit scope.
+~
+We then looked at Semigroup and Monoid in cats. Let's review those.
+~~~~
+##Implementing scala.Option
+
+* Clone https://github.com/Grogs/scala-fp.git
+* Checkout the `lesson4` branch
+* Fix the tests in `CreatingOption` 
+
+~~~~
+Moar Typeclasses
+~
+##Functor
+~
+###What is a Functor?
+
+Something you can map over.   
+
+In other words, you can transform the thing inside
+
+```scala
+trait Functor[F[_]] {
+  def map[A,B](fa: F[A])(f: A => B): F[B]
+}
+```
+~
+###Examples
+
+```scala
+List(1,2,3).map(_ * 2) //List(2,4,6)
+
+Option(4).map(_ / 2) //Option(2)
+
+Future(fetchHotelJson(15234)).map(deserialize) // Future[Hotel]
+```
+~
+
+~
+##Monad
+~
+What's a monad?
+~
+A data type which implements the Monad interface:
+
+```scala
+trait Monad[F[_]] {
+  def pure[A](x: A): F[A]
+  def flatMap[A, B](fa: F[A])(f: A => F[B]): F[B]
+}
+```
+
+And obeys some laws:
+* Left identity
+* Right identity
+* Associativity
+~
+This doesn't give you any intuition. It's very general.
+~
+Monads cannot be taught. They must be discovered. 
+
+Note:
+The problem with monad tutorials is that they are predicated on someone teaching/explaining monads. But you must explore them yourself. You will never really understand monads until you do this
+~
+###One intuition
+
+A monad allows you to build pipelines that process some data
+
+<br />
+
+Each stage of the pipeline allows additional processing rules provided by the monad.
+
+Note:
+flatMap is how we compose monads
+~
+There a number of Monads that model success or failure.
+* Option 
+* Try
+* std Either / cats Xor / scalactic Or
+* Future is like Try, but also asynchronous.
+
+<br />
+
+```
+for {
+  user <- getUser(request)
+  profile <- getProfile(user)
+} yield profile.description
+```
+
+Note:
+Mention the point function for these monads. (Some/Success/Right/Future.successful)
+You can use flatMap directly or in a for-comprehension
+~
+###List  
+
+Non-deterministic computation.   
+Instead of producing a single result, might produce many
+
+```
+for {
+  a <- 1 to 99
+  b <- 1 to 999
+} yield s"output $a $b"
+```
+
+
+Note: Completely different effect. We can short circuit this. But we can also generate many values as output.
+          </script>
+        </section>
+
+      </div>
+    </div>
+
+    <script src="lib/js/head.min.js"></script>
+    <script src="js/reveal.js"></script>
+
+    <script>
+      // More info https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+        history: true,
+//         showNotes: true,
+
+        // More info https://github.com/hakimel/reveal.js#dependencies
+        dependencies: [
+          { src: 'plugin/markdown/marked.js' },
+          { src: 'plugin/markdown/markdown.js' },
+          { src: 'plugin/notes/notes.js', async: true },
+          { src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } }
+        ]
+      });
+    </script>
+  </body>
+</html>
