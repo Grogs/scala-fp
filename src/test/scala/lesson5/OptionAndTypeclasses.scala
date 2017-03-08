@@ -5,7 +5,9 @@ import org.scalatest.{FunSuite, Matchers}
 
 import scala.{None => _, Option => _, Some => _} //Disable stdlib Option
 
-class OptionTypeclasses extends FunSuite with Matchers {
+class OptionAndTypeclasses extends FunSuite with Matchers {
+
+
 
   sealed trait Option[+A] {
     def getOrElse[B>:A](default: => B): B = this match {
@@ -31,10 +33,7 @@ class OptionTypeclasses extends FunSuite with Matchers {
 
     implicit object OptionFunctor extends Functor[Option] {
       def map[A, B](fa: Option[A])(f: (A) => B): Option[B] = {
-        fa  match {
-          case Some(a) => Some(f(a))
-          case None => None
-        }
+        ???
       }
     }
 
@@ -51,14 +50,11 @@ class OptionTypeclasses extends FunSuite with Matchers {
     implicit object OptionMonad extends Monad[Option] with RecursiveTailRecM[Option] {
 
       def flatMap[A, B](fa: Option[A])(f: (A) => Option[B]): Option[B] = {
-        fa match {
-          case Some(a) => f(a)
-          case None => None
-        }
+        ???
       }
 
       def pure[A](x: A): Option[A] = {
-        Some(x)
+        ???
       }
     }
 
@@ -86,21 +82,19 @@ class OptionTypeclasses extends FunSuite with Matchers {
 
   test("MonadFilter[Option] gives you map, flatMap, and filter") {
 
+    //Interestingly, we don't actually implement filter. Just implementing .empty makes Monad powerful enough to derive .filter
     implicit object OptionMonadFilter extends MonadFilter[Option] with RecursiveTailRecM[Option] {
 
       def flatMap[A, B](fa: Option[A])(f: (A) => Option[B]): Option[B] = {
-        fa match {
-          case Some(a) => f(a)
-          case None => None
-        }
+        ???
       }
 
       def pure[A](x: A): Option[A] = {
-        Some(x)
+        ???
       }
 
       def empty[A]: Option[A] = {
-        None
+        ???
       }
     }
 

@@ -7,12 +7,12 @@ import cats.instances.int._
 import cats.instances.future._
 import org.scalatest.concurrent.ScalaFutures
 
-import scala.collection.immutable.Seq
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.{None => _, Option => _, Some => _} //Disable stdlib Option
 
-class OptionOtherTypeclasses extends FunSuite with Matchers with ScalaFutures {
+class MoreOptionTypeclasses extends FunSuite with Matchers with ScalaFutures {
+
 
   sealed trait Option[+A] {
     def getOrElse[B>:A](default: => B): B = this match {
@@ -32,25 +32,23 @@ class OptionOtherTypeclasses extends FunSuite with Matchers with ScalaFutures {
   case class Some[+A](get: A) extends Option[A]
   case object None extends Option[Nothing]
 
+
+
+
   val none: Option[Int] = None
 
   test("Foldable[Option] lets us fold an Option into some summary value") {
+
     implicit object OptionFoldable extends Foldable[Option] {
 
       def foldLeft[A, B](fa: Option[A], b: B)(f: (B, A) => B): B = {
-        fa match {
-          case None => b
-          case Some(a) => f(b, a)
-        }
+        ???
       }
 
       // Note: Eval is short for Evaluation, and lets us control when `lb` is evaluated.
       // Here, we're using it so that `lb` can be evaluated lazily, which gives us stack safety.
       def foldRight[A, B](fa: Option[A], lb: Eval[B])(f: (A, Eval[B]) => Eval[B]): Eval[B] = {
-        fa match {
-          case None => lb
-          case Some(a) => f(a, lb)
-        }
+        ???
       }
     }
 
@@ -78,24 +76,15 @@ class OptionOtherTypeclasses extends FunSuite with Matchers with ScalaFutures {
     implicit object OptionTraverse extends Traverse[Option] {
 
       def foldLeft[A, B](fa: Option[A], b: B)(f: (B, A) => B): B = {
-        fa match {
-          case None => b
-          case Some(a) => f(b, a)
-        }
+        ???
       }
 
       def foldRight[A, B](fa: Option[A], lb: Eval[B])(f: (A, Eval[B]) => Eval[B]): Eval[B] = {
-        fa match {
-          case None => lb
-          case Some(a) => f(a, lb)
-        }
+        ???
       }
 
       def traverse[G[_]: Applicative, In, Out](fa: Option[In])(f: In => G[Out]): G[Option[Out]] = {
-        fa match {
-          case None => Applicative[G].pure(None)
-          case Some(a) => Applicative[G].map(f(a))(Some(_))
-        }
+        ???
       }
     }
 
