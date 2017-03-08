@@ -1,0 +1,161 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <title>reveal.js</title>
+
+    <link rel="stylesheet" href="css/reveal.css">
+    <link rel="stylesheet" href="css/theme/sky.css">
+
+    <!-- Theme used for syntax highlighting of code -->
+    <link rel="stylesheet" href="lib/css/docco.css">
+
+    <!-- Printing and PDF exports -->
+    <script>
+      var link = document.createElement( 'link' );
+      link.rel = 'stylesheet';
+      link.type = 'text/css';
+      link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+      document.getElementsByTagName( 'head' )[0].appendChild( link );
+    </script>
+    <style>
+      .reveal .footer {
+        position: absolute;
+        bottom: 1em;
+        left: 1em;
+        font-size: 0.7em;
+      }
+
+      /*Theme overrides*/
+        .reveal h1, .reveal h2, .reveal h3, .reveal h4, .reveal h5, .reveal h6 {
+          text-transform: none;
+        }
+    </style>
+  </head>
+  <body>
+    <div class="reveal">
+      <div class='footer'>
+        <a href="https://grogs.github.io/scala-fp">grogs.github.io/scala-fp</a>
+      </div>
+      <div class="slides">
+        <section data-markdown data-separator="^~~~~" data-separator-vertical="^~" data-notes="^Note:">
+          <script type="text/template">
+<!--language=Markdown-->
+## Functional Programming with Scala  
+
+### Lesson 4
+
+~~~~
+Last we implemented our own version of Option.
+~
+Including these three methods:
+* map
+* filter
+* flatMap
+~
+###Functor
+
+Our Option was a Functor as it implemented `map`, allowing us to transform the thing inside.
+
+As a typeclass:  
+
+```scala
+trait Functor[F[_]] {
+  def map[A,B](fa: F[A])(f: A => B): F[B]
+}
+```
+~
+###Examples
+
+```scala
+List(1,2,3).map(_ * 2) //List(2,4,6)
+
+Option(4).map(_ / 2) //Option(2)
+
+Future(fetchHotelJson(15234)).map(deserialize) // Future[Hotel]
+```
+~~~~
+##Monad
+
+Anything that implements `flatMap` (and pure) is a Monad.
+
+As a typeclass:
+```scala
+trait Monad[F[_]] {
+  def pure[A](x: A): F[A]
+  def flatMap[A, B](fa: F[A])(f: A => F[B]): F[B]
+}
+```
+
+~
+Why is Monad useful?
+~
+###For-comprehensions
+
+Scala's for-comprehensions are actually just syntactic sugar for calls to `.map` and `.flatMap`
+~
+
+```scala
+val result = for {
+  a <- Option(1)
+  b <- Option(2)
+  c = a + b
+} yield c
+```
+
+is equivalent to
+
+```scala
+Option(1).flatMap(a =>
+  Option(2).map( b =>
+    c = a + b
+    c
+  )
+)
+```
+~
+For-comprehensions are not just for Option or collections  
+
+We can use them to build up pipelines/programs with some monadic "effect"  
+~
+* For Option the monadic effect is that something may fail or be unavailable  
+
+* For List the monadic effect is that we may get a variable number of results at any point in the pipeline  
+
+* For Future each stage is asynchronous and may fail
+~
+###Exercise 1
+
+* Checkout `lesson5` of  
+https://github.com/Grogs/scala-fp.git  
+
+* Fix the tests in `OptionAndTypeclasses`
+  * You will have to implement `Functor`, `Monad`, and `MonadFilter` for our version of Option
+          </script>
+        </section>
+
+      </div>
+    </div>
+
+    <script src="lib/js/head.min.js"></script>
+    <script src="js/reveal.js"></script>
+
+    <script>
+      // More info https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+        history: true,
+//         showNotes: true,
+
+        // More info https://github.com/hakimel/reveal.js#dependencies
+        dependencies: [
+          { src: 'plugin/markdown/marked.js' },
+          { src: 'plugin/markdown/markdown.js' },
+          { src: 'plugin/notes/notes.js', async: true },
+          { src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } }
+        ]
+      });
+    </script>
+  </body>
+</html>
