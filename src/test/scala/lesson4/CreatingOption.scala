@@ -6,11 +6,26 @@ import scala.{Option => _, Some => _, None => _} //Disable stdlib Option
 class CreatingOption extends FunSuite with Matchers {
 
   sealed trait Option[+A] {
-    def map[B](f: A => B): Option[B] = ???
-    def getOrElse[B>:A](default: => B): B = ???
-    def orElse[B>:A](ob: => Option[B]): Option[B] = ???
-    def filter(f: A => Boolean): Option[A] = ???
-    def flatMap[B](f: A => Option[B]): Option[B] = ???
+    def map[B](f: A => B): Option[B] = this match {
+      case Some(a) => Some(f(a))
+      case None => None
+    }
+    def getOrElse[B>:A](default: => B): B = this match {
+      case Some(a) => a
+      case None => default
+    }
+    def orElse[B>:A](ob: => Option[B]): Option[B] = this match {
+      case Some(a) => Some(a)
+      case None => ob
+    }
+    def filter(f: A => Boolean): Option[A] = this match {
+      case Some(a) if f(a) => Some(a)
+      case other => None
+    }
+    def flatMap[B](f: A => Option[B]): Option[B] = this match {
+      case Some(a) => f(a)
+      case None => None
+    }
   }
 
   case class Some[+A](get: A) extends Option[A]
