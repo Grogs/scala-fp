@@ -1,0 +1,109 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <title>reveal.js</title>
+
+    <link rel="stylesheet" href="css/reveal.css">
+    <link rel="stylesheet" href="css/theme/sky.css">
+
+    <!-- Theme used for syntax highlighting of code -->
+    <link rel="stylesheet" href="lib/css/docco.css">
+
+    <!-- Printing and PDF exports -->
+    <script>
+      var link = document.createElement( 'link' );
+      link.rel = 'stylesheet';
+      link.type = 'text/css';
+      link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+      document.getElementsByTagName( 'head' )[0].appendChild( link );
+    </script>
+    <style>
+      .reveal .footer {
+        position: absolute;
+        bottom: 1em;
+        left: 1em;
+        font-size: 0.7em;
+      }
+
+      /*Theme overrides*/
+        .reveal h1, .reveal h2, .reveal h3, .reveal h4, .reveal h5, .reveal h6 {
+          text-transform: none;
+        }
+    </style>
+  </head>
+  <body>
+    <div class="reveal">
+      <div class='footer'>
+        <a href="https://grogs.github.io/scala-fp">grogs.github.io/scala-fp</a>
+      </div>
+      <div class="slides">
+        <section data-markdown data-separator="^~~~~" data-separator-vertical="^~" data-notes="^Note:">
+          <script type="text/template">
+<!--language=Markdown-->
+## Functional Programming with Scala  
+
+### Lesson 6
+
+~~~~
+###Code Kata
+~
+Today, let's try to solve a problem in a functional way.
+~
+###Conway's Game of Life
+~
+###Concepts
+
+* Cells. A cell can be alive or dead.
+* Grid. The game has a grid of cells
+* Tick. The game progresses through ticks.
+~
+###Rules
+
+On each tick of the game:
+1. Any live cell with fewer than two live neighbours dies, as if caused by underpopulation.  
+
+2. Any live cell with more than three live neighbours dies, as if by overcrowding.  
+
+3. Any live cell with two or three live neighbours lives on to the next generation.  
+
+4. Any dead cell with exactly three live neighbours becomes a live cell.  
+~
+##[DEMO](https://www.google.co.uk/search?q=conways+game+of+life)
+~
+###Stay Functional
+
+* Immutability
+  * No vars
+  * Immutable collections
+~
+###Skeleton project
+
+https://github.com/Grogs/scala-tdd-skeleton
+~
+<img src="gol-rules.jpg" style="height:50%;width:50%;" alt="Game of Life Rules">
+
+          </script>
+        </section>
+
+      </div>
+    </div>
+
+    <script src="lib/js/head.min.js"></script>
+    <script src="js/reveal.js"></script>
+
+    <script>
+      Reveal.initialize({
+        history: true,
+        dependencies: [
+          { src: 'plugin/markdown/marked.js' },
+          { src: 'plugin/markdown/markdown.js' },
+          { src: 'plugin/notes/notes.js', async: true },
+          { src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } }
+        ]
+      });
+    </script>
+  </body>
+</html>
